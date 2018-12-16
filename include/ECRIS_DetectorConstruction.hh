@@ -25,10 +25,12 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4Tubs.hh"
+#include "G4UnionSolid.hh"
 
 class G4LogicalVolume;
 class G4Material;
-//class ECRIS_DetectorMessenger;
+class ECRIS_DetectorMessenger;
 //class ECRIS_GlobalMagFieldMessenger;
 
 
@@ -40,24 +42,53 @@ public:
 
 public:
   virtual G4VPhysicalVolume* Construct();
+  virtual void ConstructSDandField();
   void SetMaterial(const G4String&);
 
 public:
   const G4VPhysicalVolume* GetWorld()     { return fWorldBoxPV;}
   G4Material* GetMaterial()                          { return fMaterial;}
+  void           DefineMaterials();
   void fPrintParameters();
+
+private:
+  G4VPhysicalVolume* fConstructVolume();
+  void fFixDimension();   // fix dimension of all chambers etc.
+
 
 private:
   G4VPhysicalVolume*      fWorldBoxPV;
   G4Material*                     fMaterial;
-  G4LogicalVolume*          fPlasmaChamberLV;
-  G4G4VPhysicalVolume* fPlasmaChamberPV;
+  G4LogicalVolume*          fPlasmaChamberAlLV;
+  G4VPhysicalVolume*      fPlasmaChamberAlPV;
+  G4LogicalVolume*          fPlasmaChamberTaLV;
+  G4VPhysicalVolume*      fPlasmaChamberTaPV;
   G4LogicalVolume*          fYokeLV;
-  G4G4VPhysicalVolume* fYokePV;
+  G4VPhysicalVolume*      fYokePV;
+  G4Tubs*                           fTubeAl;
+  G4Tubs*                           fTubeAlLid;
+  G4UnionSolid*                fPlasmaTubeAl;
+  G4Tubs*                           fTubeTa;
+  G4Tubs*                           fTubeTaLid;
+  G4UnionSolid*                fPlasmaTubeTa;
 
-private:
-  void fDefineMaterial();
-  G4VPhysicalVolume* fConstructVolume();
+  G4double                         fMaxRadChambers;
+  G4double                         fMaxHeightChambers;
+  G4double                         fAlChamberWallThk;
+  G4double                         fTaChamberWallThk;
+  G4double                         fRadialGap;
+
+  G4double                         fAlTubeInnerRad;
+  G4double                         fAlTubeOuterRad;
+  G4double                         fAlTubeHalfHeight;
+
+  G4double                         fTaTubeInnerRad;
+  G4double                         fTaTubeOuterRad;
+  G4double                         fTaTubeHalfHeight;
+
+
+  ECRIS_DetectorMessenger* fECRMess;
+
 };
 //....ooooOOOOoooo....
 
